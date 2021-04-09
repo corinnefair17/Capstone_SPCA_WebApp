@@ -1,0 +1,243 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="SPCAModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Camera">
+          <Key>
+            <PropertyRef Name="Camera_Number" />
+          </Key>
+          <Property Name="Camera_Number" Type="int" Nullable="false" />
+          <Property Name="Dog_Name" Type="nvarchar" MaxLength="255" />
+        </EntityType>
+        <EntityType Name="Documents">
+          <Key>
+            <PropertyRef Name="Record_ID" />
+          </Key>
+          <Property Name="Record_ID" Type="int" Nullable="false" />
+          <Property Name="Record_Title" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="Dog_Name" Type="nvarchar" MaxLength="255" />
+          <Property Name="Record_Copy" Type="image" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Dog">
+          <Key>
+            <PropertyRef Name="Dog_Name" />
+          </Key>
+          <Property Name="Dog_Name" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="Kennel_ID" Type="int" Nullable="false" />
+          <Property Name="Breed" Type="nvarchar" MaxLength="255" />
+          <Property Name="Weight" Type="real" />
+          <Property Name="Age" Type="real" />
+          <Property Name="Last_Fed" Type="datetime" />
+          <Property Name="Picture" Type="image" />
+          <Property Name="Notes" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="principal_id" Type="int" Nullable="false" />
+          <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="version" Type="int" />
+          <Property Name="definition" Type="varbinary(max)" />
+        </EntityType>
+        <Association Name="FK_Camera_Dog">
+          <End Role="Dog" Type="Self.Dog" Multiplicity="0..1" />
+          <End Role="Camera" Type="Self.Camera" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Dog">
+              <PropertyRef Name="Dog_Name" />
+            </Principal>
+            <Dependent Role="Camera">
+              <PropertyRef Name="Dog_Name" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Documents_Dog">
+          <End Role="Dog" Type="Self.Dog" Multiplicity="0..1" />
+          <End Role="Documents" Type="Self.Documents" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Dog">
+              <PropertyRef Name="Dog_Name" />
+            </Principal>
+            <Dependent Role="Documents">
+              <PropertyRef Name="Dog_Name" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="SPCAModelStoreContainer">
+          <EntitySet Name="Camera" EntityType="Self.Camera" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Documents" EntityType="Self.Documents" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Dog" EntityType="Self.Dog" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Camera_Dog" Association="Self.FK_Camera_Dog">
+            <End Role="Dog" EntitySet="Dog" />
+            <End Role="Camera" EntitySet="Camera" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Documents_Dog" Association="Self.FK_Documents_Dog">
+            <End Role="Dog" EntitySet="Dog" />
+            <End Role="Documents" EntitySet="Documents" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="SPCAModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Camera">
+          <Key>
+            <PropertyRef Name="Camera_Number" />
+          </Key>
+          <Property Name="Camera_Number" Type="Int32" Nullable="false" />
+          <Property Name="Dog_Name" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Dog" Relationship="Self.FK_Camera_Dog" FromRole="Camera" ToRole="Dog" />
+        </EntityType>
+        <EntityType Name="Document">
+          <Key>
+            <PropertyRef Name="Record_ID" />
+          </Key>
+          <Property Name="Record_ID" Type="Int32" Nullable="false" />
+          <Property Name="Record_Title" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Dog_Name" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="Record_Copy" Type="Binary" MaxLength="Max" FixedLength="false" Nullable="false" />
+          <NavigationProperty Name="Dog" Relationship="Self.FK_Documents_Dog" FromRole="Documents" ToRole="Dog" />
+        </EntityType>
+        <EntityType Name="Dog">
+          <Key>
+            <PropertyRef Name="Dog_Name" />
+          </Key>
+          <Property Name="Dog_Name" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Kennel_ID" Type="Int32" Nullable="false" />
+          <Property Name="Breed" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="Weight" Type="Single" />
+          <Property Name="Age" Type="Single" />
+          <Property Name="Last_Fed" Type="DateTime" Precision="3" />
+          <Property Name="Picture" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="Notes" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Cameras" Relationship="Self.FK_Camera_Dog" FromRole="Dog" ToRole="Camera" />
+          <NavigationProperty Name="Documents" Relationship="Self.FK_Documents_Dog" FromRole="Dog" ToRole="Documents" />
+        </EntityType>
+        <EntityType Name="sysdiagram">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="principal_id" Type="Int32" Nullable="false" />
+          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="version" Type="Int32" />
+          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+        </EntityType>
+        <Association Name="FK_Camera_Dog">
+          <End Role="Dog" Type="Self.Dog" Multiplicity="0..1" />
+          <End Role="Camera" Type="Self.Camera" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Dog">
+              <PropertyRef Name="Dog_Name" />
+            </Principal>
+            <Dependent Role="Camera">
+              <PropertyRef Name="Dog_Name" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Documents_Dog">
+          <End Role="Dog" Type="Self.Dog" Multiplicity="0..1" />
+          <End Role="Documents" Type="Self.Document" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Dog">
+              <PropertyRef Name="Dog_Name" />
+            </Principal>
+            <Dependent Role="Documents">
+              <PropertyRef Name="Dog_Name" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="Entities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Cameras" EntityType="Self.Camera" />
+          <EntitySet Name="Documents" EntityType="Self.Document" />
+          <EntitySet Name="Dogs" EntityType="Self.Dog" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagram" />
+          <AssociationSet Name="FK_Camera_Dog" Association="Self.FK_Camera_Dog">
+            <End Role="Dog" EntitySet="Dogs" />
+            <End Role="Camera" EntitySet="Cameras" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Documents_Dog" Association="Self.FK_Documents_Dog">
+            <End Role="Dog" EntitySet="Dogs" />
+            <End Role="Documents" EntitySet="Documents" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="SPCAModelStoreContainer" CdmEntityContainer="Entities">
+          <EntitySetMapping Name="Cameras">
+            <EntityTypeMapping TypeName="SPCAModel.Camera">
+              <MappingFragment StoreEntitySet="Camera">
+                <ScalarProperty Name="Camera_Number" ColumnName="Camera_Number" />
+                <ScalarProperty Name="Dog_Name" ColumnName="Dog_Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Documents">
+            <EntityTypeMapping TypeName="SPCAModel.Document">
+              <MappingFragment StoreEntitySet="Documents">
+                <ScalarProperty Name="Record_ID" ColumnName="Record_ID" />
+                <ScalarProperty Name="Record_Title" ColumnName="Record_Title" />
+                <ScalarProperty Name="Dog_Name" ColumnName="Dog_Name" />
+                <ScalarProperty Name="Record_Copy" ColumnName="Record_Copy" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Dogs">
+            <EntityTypeMapping TypeName="SPCAModel.Dog">
+              <MappingFragment StoreEntitySet="Dog">
+                <ScalarProperty Name="Dog_Name" ColumnName="Dog_Name" />
+                <ScalarProperty Name="Kennel_ID" ColumnName="Kennel_ID" />
+                <ScalarProperty Name="Breed" ColumnName="Breed" />
+                <ScalarProperty Name="Weight" ColumnName="Weight" />
+                <ScalarProperty Name="Age" ColumnName="Age" />
+                <ScalarProperty Name="Last_Fed" ColumnName="Last_Fed" />
+                <ScalarProperty Name="Picture" ColumnName="Picture" />
+                <ScalarProperty Name="Notes" ColumnName="Notes" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sysdiagrams">
+            <EntityTypeMapping TypeName="SPCAModel.sysdiagram">
+              <MappingFragment StoreEntitySet="sysdiagrams">
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="definition" ColumnName="definition" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
