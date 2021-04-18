@@ -24,6 +24,7 @@
             <tr style="text-align:center; font-size:large">
                 <td>
                     <asp:RequiredFieldValidator ID="nameRequiredValidator" CssClass="text-danger" Display="Static" ControlToValidate="dogName" ErrorMessage="Dog Name Required" runat="server">*</asp:RequiredFieldValidator>
+                    Name:&nbsp;
                     <textarea id="dogName" runat="server" rows="1" placeholder="No Data" disabled style="resize:none; background-color:#FFF"></textarea>
                 </td>
                 <td></td>

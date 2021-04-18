@@ -1,4 +1,4 @@
-﻿// T4 code generation is enabled for model 'C:\Users\cfair\source\repos\SPCA_Capstone\SPCA_Capstone\Models\Model1.edmx'. 
+﻿// T4 code generation is enabled for model 'C:\Users\17574\Desktop\Capstone_SPCA_WebApp\SPCA_Capstone\Models\Model1.edmx'. 
 // To enable legacy code generation, change the value of the 'Code Generation Strategy' designer
 // property to 'Legacy ObjectContext'. This property is available in the Properties Window when the model
 // is open in the designer.
