@@ -15,10 +15,12 @@ namespace SPCA_Capstone
 {
     public partial class WebForm1 : System.Web.UI.Page
     {
+        public string chartData;
+
         // This method runs upon the page loading or refreshing
         protected void Page_Load(object sender, EventArgs e)
         {
-
+            GetChartData();
         }
 
         // When a new dog is selected to the dropdown, grab the name of the dog selected and pass it to Load_Dog
@@ -36,6 +38,38 @@ namespace SPCA_Capstone
             {
                 Load_Dog(selectedDogName);
             }
+        }
+
+        public void GetChartData()
+        {
+            string connstr = WebConfigurationManager.ConnectionStrings["SPCAConnectionString"].ConnectionString;
+
+            SqlConnection conn = new SqlConnection(connstr);
+            conn.Open();
+
+            string sql = "SELECT Head, Time_Stamp FROM Movement WHERE Dog_ID=" + Get_Dog_ID(DogDropdown.SelectedValue);
+
+            SqlCommand cmd = new SqlCommand(sql, conn);
+            DataTable dt = new DataTable();
+            dt.Load(cmd.ExecuteReader());
+
+            if (dt.Rows.Count == 0)
+            {
+                chartData = "[[" + DateTimeOffset.Now.ToUnixTimeMilliseconds() + ",0]]";
+            }
+            else
+            {
+                chartData = "[";
+                foreach (DataRow dr in dt.Rows)
+                {
+                    string sqltime = dr["Time_Stamp"].ToString();
+                    DateTimeOffset time = DateTime.Parse(sqltime);
+                    long milliseconds = time.ToUnixTimeMilliseconds();
+                    chartData += "[" + milliseconds + ", " + dr["Head"] + "],";
+                }
+                chartData = chartData.Remove(chartData.Length - 1) + "]";
+            }
+            conn.Close();
         }
 
         // On clicking the add button, all fields are emptied and enabled to allow editing
@@ -288,23 +322,6 @@ namespace SPCA_Capstone
             dogAge.Value = dbAge.ToString();
             notes.Value = dbNotes;
 
-            // Now to get the movement data
-            sql = "SELECT Head, Nose, Haunches, Shoulder, Time_Stamp FROM Movement WHERE Dog_ID = " + dbDogID;
-            cmd = new SqlCommand(sql, conn);
-
-            string activityDataStr = "";
-
-            using (SqlDataReader reader = cmd.ExecuteReader())
-            {
-                while (reader.Read())
-                {
-                    activityDataStr += "Head: " + reader.GetFloat(0).ToString("0.00") + "; Nose: " + reader.GetFloat(1).ToString("0.00") + "; Haunches: " + reader.GetFloat(2).ToString("0.00")
-                        + "; Shoulders: " + reader.GetFloat(3).ToString("0.00") + "; Timestamp: " + reader.GetDateTime(4).ToString() + "\n";
-                }
-            }
-
-            activityData.Value = activityDataStr;
-
             // Finally, grab image if one exists
             sql = "SELECT Picture FROM Dogs WHERE Dog_ID = " + dbDogID;
             cmd = new SqlCommand(sql, conn);
@@ -336,7 +353,6 @@ namespace SPCA_Capstone
             dogWeight.Value = "";
             dogAge.Value = "";
             notes.Value = "";
-            activityData.Value = "";
         }
 
         private void Set_All_Disabled(bool disabled)

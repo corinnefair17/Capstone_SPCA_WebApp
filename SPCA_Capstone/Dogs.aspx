@@ -79,12 +79,41 @@
             </tr>
             <tr>
                 <td colspan="2" style="font-size:large; white-space:pre">
-                    Activity Data:&nbsp;
-                    <textarea id="activityData" runat="server" rows="5" disabled style="font-size:large; resize:vertical; width:100%; max-width:88%; background-color:#FFF"></textarea>
+                    <div id="chart" style="width:850px; height:500px; text-align:center"></div>
                 </td>
             </tr>
         </tbody>
         </table>
+        <script type="text/javascript" src="https://code.highcharts.com/highcharts.js"></script>
+        <script>
+            $('#chart').highcharts({
+                chart: {
+                    type: 'spline'
+                },
+                title: {
+                    text: 'Dog Activity Data'
+                },
+                xAxis: {
+                    title: {
+                        text: 'Time'
+                    },
+                    type: 'datetime',
+                    labels: {
+                        format: '{value:%e %b %H:%M:%S}'
+                    }
+                },
+                yAxis: {
+                    title: {
+                        text: 'Meters/Minute'
+                    }
+                },
+                series: [{
+                    type: 'spline',
+                    name: 'Movement Data',
+                    data: <%=chartData%>
+                }]
+            });
+        </script>
     </div>
     <hr />
     <div id="optionsArea" style="text-align:right" runat="server">
