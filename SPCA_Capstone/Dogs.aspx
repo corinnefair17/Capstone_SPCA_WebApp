@@ -109,8 +109,23 @@
                 },
                 series: [{
                     type: 'spline',
-                    name: 'Movement Data',
-                    data: <%=chartData%>
+                    name: 'Head',
+                    data: <%=headData%>
+                },
+                {
+                    type: 'spline',
+                    name: 'Nose',
+                    data: <%=noseData%>
+                },
+                {
+                    type: 'spline',
+                    name: 'Haunches',
+                    data: <%=haunchesData%>
+                },
+                {
+                    type: 'spline',
+                    name: 'Shoulder',
+                    data: <%=shoulderData%>
                 }]
             });
         </script>

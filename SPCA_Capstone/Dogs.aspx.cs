@@ -15,7 +15,10 @@ namespace SPCA_Capstone
 {
     public partial class WebForm1 : System.Web.UI.Page
     {
-        public string chartData;
+        public string headData;
+        public string noseData;
+        public string haunchesData;
+        public string shoulderData;
 
         // This method runs upon the page loading or refreshing
         protected void Page_Load(object sender, EventArgs e)
@@ -47,7 +50,7 @@ namespace SPCA_Capstone
             SqlConnection conn = new SqlConnection(connstr);
             conn.Open();
 
-            string sql = "SELECT Head, Time_Stamp FROM Movement WHERE Dog_ID=" + Get_Dog_ID(DogDropdown.SelectedValue);
+            string sql = "SELECT Head, Nose, Haunches, Shoulder, Time_Stamp FROM Movement WHERE Dog_ID=" + Get_Dog_ID(DogDropdown.SelectedValue);
 
             SqlCommand cmd = new SqlCommand(sql, conn);
             DataTable dt = new DataTable();
@@ -55,19 +58,31 @@ namespace SPCA_Capstone
 
             if (dt.Rows.Count == 0)
             {
-                chartData = "[[" + DateTimeOffset.Now.ToUnixTimeMilliseconds() + ",0]]";
+                headData = "[[" + DateTimeOffset.Now.ToUnixTimeMilliseconds() + ",0]]";
+                noseData = "[[" + DateTimeOffset.Now.ToUnixTimeMilliseconds() + ",0]]";
+                haunchesData = "[[" + DateTimeOffset.Now.ToUnixTimeMilliseconds() + ",0]]";
+                shoulderData = "[[" + DateTimeOffset.Now.ToUnixTimeMilliseconds() + ",0]]";
             }
             else
             {
-                chartData = "[";
+                headData = "[";
+                noseData = "[";
+                haunchesData = "[";
+                shoulderData = "[";
                 foreach (DataRow dr in dt.Rows)
                 {
                     string sqltime = dr["Time_Stamp"].ToString();
                     DateTimeOffset time = DateTime.Parse(sqltime);
                     long milliseconds = time.ToUnixTimeMilliseconds();
-                    chartData += "[" + milliseconds + ", " + dr["Head"] + "],";
+                    headData += "[" + milliseconds + ", " + dr["Head"] + "],";
+                    noseData += "[" + milliseconds + ", " + dr["Nose"] + "],";
+                    haunchesData += "[" + milliseconds + ", " + dr["Haunches"] + "],";
+                    shoulderData += "[" + milliseconds + ", " + dr["Shoulder"] + "],";
                 }
-                chartData = chartData.Remove(chartData.Length - 1) + "]";
+                headData = headData.Remove(headData.Length - 1) + "]";
+                noseData = noseData.Remove(noseData.Length - 1) + "]";
+                haunchesData = haunchesData.Remove(haunchesData.Length - 1) + "]";
+                shoulderData = shoulderData.Remove(shoulderData.Length - 1) + "]";
             }
             conn.Close();
         }
